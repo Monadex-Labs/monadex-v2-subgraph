@@ -76,9 +76,6 @@ templates:
 features:
   - grafting
 graft:
-  base: QmUtGm33GnY6hvnBnAJs8N78Vo7k11ZPctNU8cu7RbNfsp
-  block: 84695232
-#  BASE 1 before ARBDOGE/WETH
-#  base: QmeYzZQZtKwD7QxMxcRVgSEE9bPEP1yx8Hi8vQUZN7ep9E
-#  block: 78866693
+  base: QmYWw23xQow6i73MpqJ3ryPZe6pEd8T6NYzbhy4MorpZqN
+  block: 190393612
 

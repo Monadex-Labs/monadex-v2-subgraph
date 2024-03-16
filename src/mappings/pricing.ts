@@ -33,6 +33,7 @@ let WHITELIST: string[] = [
   '0x6cda1d3d092811b2d48f7476adb59a6239ca9b95', // stafi-rETH
   '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9', // USDT
   '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
+  '0xeb1a8f8ea373536600082ba9ae2db97327513f7d', // apOHM
 ]
 
 let STABLE = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
@@ -41,7 +42,7 @@ let STABLE = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
 let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('500')
 
 // minimum liquidity for price to get trackedc
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.5')
+let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.01')
 
 // minimum liquidity to stop trying to get biggest pair
 let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('50')
