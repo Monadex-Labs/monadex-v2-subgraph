@@ -10,9 +10,9 @@ This subgraph dynamically tracks any pair created by the uniswap factory. It tra
 - data on liquidity providers
 - historical data on Uniswap, pairs or tokens, aggregated by day
 
-## Running Locally
+## Building & Deploying
 
-Make sure to update package.json settings to point to your own graph account.
+Make sure to edit `TARGET_CHAIN` in `src/config/chains.js` to point to the correct chain before running anything. New chains must be declared in `SupportedChains` and declared as a new `ChainInfo` class to satisfy graph's Assembly Script type checking. 
 
 ## Queries
 
