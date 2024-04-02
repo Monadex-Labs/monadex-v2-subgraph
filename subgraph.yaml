@@ -73,9 +73,4 @@ templates:
           handler: handleSync
         - event: FeePercentUpdated(uint16,uint16)
           handler: handleFeePercentUpdated
-features:
-  - grafting
-graft:
-  base: QmYWw23xQow6i73MpqJ3ryPZe6pEd8T6NYzbhy4MorpZqN
-  block: 190393612
 

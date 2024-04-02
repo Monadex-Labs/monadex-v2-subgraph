@@ -10,8 +10,7 @@ const USDC_WETH_PAIR = '0x84652bb2539513baf36e225c930fdd8eaa63ce27'
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
-  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token0
-
+  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token1
   if (usdcPair !== null) {
     return usdcPair.token1Price
   } else {
@@ -21,7 +20,6 @@ export function getEthPriceInUSD(): BigDecimal {
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-// TODO: update address
   '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', // WETH
   '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC.e
   '0xaf88d065e77c8cc2239327c5edb3a432268e5831', // USDC
@@ -90,7 +88,7 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
   }
 
   let price = ZERO_BD
-  let lastPairReserveETH = MINIMUM_LIQUIDITY_THRESHOLD_ETH
+  let lastPairReserveETH = ZERO_BD // MINIMUM_LIQUIDITY_THRESHOLD_ETH
 
 
   if(token.id == STABLE) {
@@ -102,20 +100,25 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
     }
   }
 
-  for (let i = 0; i < token.allPairs.length; ++i) {
-    let pairAddress = token.allPairs[i]
-    let pair = Pair.load(pairAddress)
-    if(!pair) continue // should never happen
-    if(
-        (pair.token0 == token.id && WHITELIST.includes(pair.token1)) ||
-        (pair.token1 == token.id && WHITELIST.includes(pair.token0)))
-    {
-      if (pair.token0 == token.id && pair.reserveETH.gt(lastPairReserveETH)) {
+  const pairBase = token.pairBase.load()
+  for (let i = 0; i < pairBase.length; ++i) {
+    let pair = pairBase[i]
+    // if(!pair) continue // should never happen
+    if(WHITELIST.includes(pair.token1)){
+      if (pair.reserveETH.gt(lastPairReserveETH)) {
         let token1 = Token.load(pair.token1) as Token
         lastPairReserveETH = pair.reserveETH
         price = pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
       }
-      if (pair.token1 == token.id && pair.reserveETH.gt(lastPairReserveETH)) {
+    }
+  }
+
+  const pairQuote = token.pairQuote.load()
+  for (let i = 0; i < pairQuote.length; ++i) {
+    let pair = pairQuote[i]
+    // if(!pair) continue // should never happen
+    if(WHITELIST.includes(pair.token0)) {
+      if (pair.reserveETH.gt(lastPairReserveETH)) {
         let token0 = Token.load(pair.token0) as Token
         lastPairReserveETH = pair.reserveETH
         price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
