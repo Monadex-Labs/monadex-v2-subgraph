@@ -25,14 +25,6 @@ subgraphFactory.source.address = factory
 subgraphFactory.source.startBlock = startBlock
 subgraph.templates[0].network = configName
 
-if (configName === ARBITRUM_ONE) {
-  subgraph.features = [ 'grafting' ],
-  subgraph.graft = {
-    base: 'QmUtGm33GnY6hvnBnAJs8N78Vo7k11ZPctNU8cu7RbNfsp',
-    block: 84695232
-  }
-}
-
 const updatedSubgraph = yaml.dump(subgraph);
 
 const networksJSON = {
