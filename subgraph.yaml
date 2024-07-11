@@ -65,7 +65,9 @@ templates:
           handler: handleTypeSwitch
         - event: Burn(indexed address,uint256,uint256,indexed address)
           handler: handleBurn
-        - event: Swap(indexed address,uint256,uint256,uint256,uint256,indexed address)
+        - event: >-
+            Swap(indexed address,uint256,uint256,uint256,uint256,indexed
+            address)
           handler: handleSwap
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
@@ -73,4 +75,3 @@ templates:
           handler: handleSync
         - event: FeePercentUpdated(uint16,uint16)
           handler: handleFeePercentUpdated
-

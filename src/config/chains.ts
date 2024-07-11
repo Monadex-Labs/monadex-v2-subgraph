@@ -1,3 +1,5 @@
+import { BigDecimal } from '@graphprotocol/graph-ts/index'
+
 // naming in line with subgraph config convention
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
@@ -10,6 +12,10 @@ class ChainInfo {
   whitelistTokens: Array<string>;
   stableCoin: string;
   startBlock: number;
+  minimumUSDThresholdNewPairs: BigDecimal;
+  minimumLiquidityThresholdETH: BigDecimal;
+  minimumLiquidityETH: BigDecimal;
+
 
   constructor(
     configName: string,
@@ -18,15 +24,21 @@ class ChainInfo {
     wrappedNativeUSDCPool: string,
     whitelistTokens: Array<string>,
     stableCoin: string,
-    startBlock: number
+    startBlock: number,
+    minimumUSDThresholdNewPairs: string,
+    minimumLiquidityThresholdETH: string,
+    minimumLiquidityETH: string
   ) {
-    this.configName = configName
-    this.factory = factory;
-    this.wrappedNative = wrappedNative;
-    this.wrappedNativeUSDCPool = wrappedNativeUSDCPool;
-    this.whitelistTokens = whitelistTokens;
-    this.stableCoin = stableCoin;
-    this.startBlock = startBlock;
+    this.configName = configName.toLowerCase()
+    this.factory = factory.toLowerCase()
+    this.wrappedNative = wrappedNative.toLowerCase()
+    this.wrappedNativeUSDCPool = wrappedNativeUSDCPool.toLowerCase()
+    this.whitelistTokens = whitelistTokens.map((token) => token.toLowerCase())
+    this.stableCoin = stableCoin.toLowerCase()
+    this.startBlock = startBlock
+    this.minimumUSDThresholdNewPairs = BigDecimal.fromString(minimumUSDThresholdNewPairs)
+    this.minimumLiquidityThresholdETH = BigDecimal.fromString(minimumLiquidityThresholdETH)
+    this.minimumLiquidityETH = BigDecimal.fromString(minimumLiquidityETH)
   }
 }
 
@@ -59,7 +71,10 @@ const arbitrumOne = new ChainInfo(
     '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
   ],
   "0xff970a61a04b1ca14834a43f5de4533ebddb5cc8",
-  35061163
+  35061163,
+  "500",
+  "0.5",
+  "50"
 )
 
 const arbitrumSepolia = new ChainInfo(
@@ -72,7 +87,10 @@ const arbitrumSepolia = new ChainInfo(
     '0xb893e3334d4bd6c5ba8277fd559e99ed683a9fc7', // USDC
   ],
   "0xb893e3334d4bd6c5ba8277fd559e99ed683a9fc7",
-  8780258
+  8780258,
+  "500",
+  "0.5",
+  "50"
 )
 
 const supportedChains = new SupportedChains(

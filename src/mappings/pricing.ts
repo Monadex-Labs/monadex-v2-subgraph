@@ -1,6 +1,7 @@
 /* eslint-disable prefer-const */
 import { Pair, Token, Bundle } from '../../generated/schema'
 import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
+import { TARGET_CHAIN } from '../config/chains'
 import {
   ZERO_BD,
   factoryContract,
@@ -24,15 +25,6 @@ export function getEthPriceInUSD(): BigDecimal {
   }
 }
 
-// minimum liquidity required to count towards tracked volume for pairs with small # of Lps
-let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('500')
-
-// minimum liquidity for price to get trackedc
-let MINIMUM_LIQUIDITY_THRESHOLD_ETH = BigDecimal.fromString('0.01')
-
-// minimum liquidity to stop trying to get biggest pair
-let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('50')
-
 /**
  * Search through graph to find derived Eth per token.
  * @todo update to be derived ETH (add stablecoin estimates)
@@ -43,7 +35,7 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
 
   let price = ZERO_BD
-  let lastPairReserveETH = MINIMUM_LIQUIDITY_THRESHOLD_ETH
+  let lastPairReserveETH = TARGET_CHAIN.minimumLiquidityThresholdETH
 
   // loop through whitelist and check if paired with any
   for (let i = 0; i < WHITELIST.length; ++i) {
@@ -62,7 +54,7 @@ export function findEthPerToken(token: Token): BigDecimal {
         price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
       }
 
-      if(lastPairReserveETH.ge(MINIMUM_LIQUIDITY_ETH)) {
+      if(lastPairReserveETH.ge(TARGET_CHAIN.minimumLiquidityETH)) {
         return price
       }
     }
@@ -76,7 +68,11 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
   }
 
   let price = ZERO_BD
+<<<<<<< HEAD
   let lastPairReserveETH = ZERO_BD // MINIMUM_LIQUIDITY_THRESHOLD_ETH
+=======
+  let lastPairReserveETH = TARGET_CHAIN.minimumLiquidityThresholdETH
+>>>>>>> bb8313f (force lowercase on addresses, add thresholds to chains config)
 
 
   if(token.id == STABLE) {
@@ -143,17 +139,17 @@ export function getTrackedVolumeUSD(
     let reserve0USD = pair.reserve0.times(price0)
     let reserve1USD = pair.reserve1.times(price1)
     if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve0USD.plus(reserve1USD).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
+      if (reserve0USD.plus(reserve1USD).lt(TARGET_CHAIN.minimumUSDThresholdNewPairs)) {
         return ZERO_BD
       }
     }
     if (WHITELIST.includes(token0.id) && !WHITELIST.includes(token1.id)) {
-      if (reserve0USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
+      if (reserve0USD.times(BigDecimal.fromString('2')).lt(TARGET_CHAIN.minimumUSDThresholdNewPairs)) {
         return ZERO_BD
       }
     }
     if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve1USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
+      if (reserve1USD.times(BigDecimal.fromString('2')).lt(TARGET_CHAIN.minimumUSDThresholdNewPairs)) {
         return ZERO_BD
       }
     }
