@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import {BigInt, BigDecimal, store, Address, ethereum, log, Bytes} from '@graphprotocol/graph-ts'
+import {BigInt, BigDecimal, store, Address, ethereum, Bytes} from '@graphprotocol/graph-ts'
 import {
   Pair,
   Token,
@@ -23,22 +23,25 @@ import {
 import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
 import {
   getEthPriceInUSD,
-  findEthPerToken,
   getTrackedVolumeUSD,
   getTrackedLiquidityUSD,
   findEthPerTokenWithoutCall
 } from './pricing'
 import {
   convertTokenToDecimal,
+  createUser,
+  createLiquidityPosition,
+  createLiquiditySnapshot,
+  exponentToBigInt
+} from './helpers'
+import {
   ADDRESS_ZERO,
   FACTORY_ADDRESS,
   ONE_BI,
-  createUser,
-  createLiquidityPosition,
   ZERO_BD,
   BI_18,
-  createLiquiditySnapshot, exponentToBigDecimal, exponentToBigInt, convertBITokenToDecimal
-} from './helpers'
+} from "./constants"
+
 import {PriceConsumer} from "../../generated/templates/Pair/PriceConsumer";
 
 let priceConsumerContract = PriceConsumer.bind(Address.fromString('0x2fa124Ce75170247c77c6e59367b0d401Dd74741'))

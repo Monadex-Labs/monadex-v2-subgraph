@@ -1,28 +1,15 @@
 /* eslint-disable prefer-const */
-import {log, BigInt, BigDecimal, Address, ethereum} from '@graphprotocol/graph-ts'
+import {BigInt, BigDecimal, Address, ethereum} from '@graphprotocol/graph-ts'
 import { ERC20 } from '../../generated/Factory/ERC20'
 import { ERC20SymbolBytes } from '../../generated/Factory/ERC20SymbolBytes'
 import { ERC20NameBytes } from '../../generated/Factory/ERC20NameBytes'
 import { User, Bundle, Token, LiquidityPosition, LiquidityPositionSnapshot, Pair } from '../../generated/schema'
-import { Factory as FactoryContract } from '../../generated/templates/Pair/Factory'
 import { TokenDefinition } from './tokenDefinition'
-
-export const ADDRESS_ZERO = '0x0000000000000000000000000000000000000000'
-export const FACTORY_ADDRESS = '0x6EcCab422D763aC031210895C81787E87B43A652' // TODO: update address
-
-export let ZERO_BI = BigInt.fromI32(0)
-export let ONE_BI = BigInt.fromI32(1)
-export let ZERO_BD = BigDecimal.fromString('0')
-export let ONE_BD = BigDecimal.fromString('1')
-export let BI_18 = BigInt.fromI32(18)
-
-export let BD_PAIR_DEFAULT_FEE_AMOUNT = BigDecimal.fromString('0.3')
-
-export let factoryContract = FactoryContract.bind(Address.fromString(FACTORY_ADDRESS))
-
-// rebass tokens, d'ont count in tracked volume
-export let UNTRACKED_PAIRS: string[] = ['']
-
+import {
+  ZERO_BI,  
+  ONE_BI,
+  ZERO_BD,
+} from "./constants"
 
 export function convertDecimalsToEth(value: BigDecimal, decimals: BigInt): BigDecimal {
   let bd = BigDecimal.fromString('1')

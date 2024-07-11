@@ -1,40 +1,28 @@
 /* eslint-disable prefer-const */
 import { Pair, Token, Bundle } from '../../generated/schema'
 import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
-import { ZERO_BD, factoryContract, ADDRESS_ZERO, ONE_BD, UNTRACKED_PAIRS } from './helpers'
-import {log} from "@graphprotocol/graph-ts";
-
-// TODO: update address
-const WETH_ADDRESS = '0x82af49447d8a07e3bd95bd0d56f35241523fbab1'
-const USDC_WETH_PAIR = '0x84652bb2539513baf36e225c930fdd8eaa63ce27'
+import {
+  ZERO_BD,
+  factoryContract,
+  ADDRESS_ZERO,
+  ONE_BD,
+  UNTRACKED_PAIRS,
+  WRAPPED_NATIVE,
+  WRAPPED_NATIVE_USDC_POOL,
+  WHITELIST,
+  STABLE
+} from './constants'
 
 export function getEthPriceInUSD(): BigDecimal {
   // fetch eth prices for each stablecoin
-  let usdcPair = Pair.load(USDC_WETH_PAIR) // usdc is token1
+  let usdcPair = Pair.load(WRAPPED_NATIVE_USDC_POOL) // usdc is token0
+
   if (usdcPair !== null) {
     return usdcPair.token1Price
   } else {
     return ZERO_BD
   }
 }
-
-// token where amounts should contribute to tracked volume and liquidity
-let WHITELIST: string[] = [
-  '0x82af49447d8a07e3bd95bd0d56f35241523fbab1', // WETH
-  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', // USDC.e
-  '0xaf88d065e77c8cc2239327c5edb3a432268e5831', // USDC
-  '0x912ce59144191c1204e64559fe8253a0e49e6548', // ARB
-  '0xd74f5255d557944cf7dd0e45ff521520002d5748', // USDs
-  '0x1622bf67e6e5747b81866fe0b85178a93c7f86e3', // UMAMI
-  '0x6c2c06790b3e3e3c38e12ee22f8183b37a13ee55', // DPX
-  '0x5979d7b546e38e414f7e9822514be443a4800529', // wstETH
-  '0x6cda1d3d092811b2d48f7476adb59a6239ca9b95', // stafi-rETH
-  '0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9', // USDT
-  '0xda10009cbd5d07dd0cecc66161fc93d7c9000da1', // DAI
-  '0xeb1a8f8ea373536600082ba9ae2db97327513f7d', // apOHM
-]
-
-let STABLE = '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8'
 
 // minimum liquidity required to count towards tracked volume for pairs with small # of Lps
 let MINIMUM_USD_THRESHOLD_NEW_PAIRS = BigDecimal.fromString('500')
@@ -50,7 +38,7 @@ let MINIMUM_LIQUIDITY_ETH = BigDecimal.fromString('50')
  * @todo update to be derived ETH (add stablecoin estimates)
  **/
 export function findEthPerToken(token: Token): BigDecimal {
-  if (token.id == WETH_ADDRESS) {
+  if (token.id == WRAPPED_NATIVE) {
     return ONE_BD
   }
 
@@ -83,7 +71,7 @@ export function findEthPerToken(token: Token): BigDecimal {
 }
 
 export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
-  if (token.id == WETH_ADDRESS) {
+  if (token.id == WRAPPED_NATIVE) {
     return ONE_BD
   }
 
@@ -92,7 +80,7 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
 
 
   if(token.id == STABLE) {
-    let pair =  Pair.load(USDC_WETH_PAIR)
+    let pair =  Pair.load(WRAPPED_NATIVE_USDC_POOL)
     if(pair) {
       let token0 = Token.load(pair.token0) as Token
       price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1

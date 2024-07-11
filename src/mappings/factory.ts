@@ -1,18 +1,20 @@
 /* eslint-disable prefer-const */
-import {BigDecimal, log} from '@graphprotocol/graph-ts'
+import {log} from '@graphprotocol/graph-ts'
 import { PairCreated } from '../../generated/Factory/Factory'
 import { Bundle, Pair, Token, UniswapFactory } from '../../generated/schema'
 import { Pair as PairTemplate } from '../../generated/templates'
 import {
-  FACTORY_ADDRESS,
   fetchTokenDecimals,
   fetchTokenName,
   fetchTokenSymbol,
   // fetchTokenTotalSupply,
+} from './helpers'
+import {
+  FACTORY_ADDRESS,
   ZERO_BD,
   ZERO_BI,
   BD_PAIR_DEFAULT_FEE_AMOUNT
-} from './helpers'
+} from "./constants"
 import {BigInt} from "@graphprotocol/graph-ts/index";
 
 let BLACKLISTED_PAIRS: string[] = [

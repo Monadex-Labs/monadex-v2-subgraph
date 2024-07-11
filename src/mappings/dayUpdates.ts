@@ -2,7 +2,7 @@
 import {BigDecimal, BigInt, ethereum} from '@graphprotocol/graph-ts'
 import { Bundle, Pair, PairDayData, Token, TokenDayData, UniswapDayData, UniswapFactory } from '../../generated/schema'
 import { PairHourData } from './../../generated/schema'
-import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI } from './helpers'
+import { FACTORY_ADDRESS, ONE_BI, ZERO_BD, ZERO_BI } from './constants'
 
 export function updateUniswapDayData(event: ethereum.Event, uniswap: UniswapFactory): UniswapDayData {
   // let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
