@@ -1,7 +1,6 @@
 /* eslint-disable prefer-const */
 import { Pair, Token, Bundle } from '../../generated/schema'
 import { BigDecimal, Address, BigInt } from '@graphprotocol/graph-ts/index'
-import { TARGET_CHAIN } from '../config/chains'
 import {
   ZERO_BD,
   factoryContract,
@@ -11,7 +10,10 @@ import {
   WRAPPED_NATIVE,
   WRAPPED_NATIVE_USDC_POOL,
   WHITELIST,
-  STABLE
+  STABLE,
+  MINIMUM_USD_THRESHOLD_NEW_PAIRS,
+  MINIMUM_LIQUIDITY_THRESHOLD_ETH,
+  MINIMUM_LIQUIDITY_ETH
 } from './constants'
 
 export function getEthPriceInUSD(): BigDecimal {
@@ -35,7 +37,7 @@ export function findEthPerToken(token: Token): BigDecimal {
   }
 
   let price = ZERO_BD
-  let lastPairReserveETH = TARGET_CHAIN.minimumLiquidityThresholdETH
+  let lastPairReserveETH = MINIMUM_LIQUIDITY_THRESHOLD_ETH
 
   // loop through whitelist and check if paired with any
   for (let i = 0; i < WHITELIST.length; ++i) {
@@ -54,7 +56,7 @@ export function findEthPerToken(token: Token): BigDecimal {
         price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
       }
 
-      if(lastPairReserveETH.ge(TARGET_CHAIN.minimumLiquidityETH)) {
+      if(lastPairReserveETH.ge(MINIMUM_LIQUIDITY_ETH)) {
         return price
       }
     }
@@ -68,11 +70,7 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
   }
 
   let price = ZERO_BD
-<<<<<<< HEAD
-  let lastPairReserveETH = ZERO_BD // MINIMUM_LIQUIDITY_THRESHOLD_ETH
-=======
-  let lastPairReserveETH = TARGET_CHAIN.minimumLiquidityThresholdETH
->>>>>>> bb8313f (force lowercase on addresses, add thresholds to chains config)
+  let lastPairReserveETH = MINIMUM_LIQUIDITY_THRESHOLD_ETH
 
 
   if(token.id == STABLE) {
@@ -139,17 +137,17 @@ export function getTrackedVolumeUSD(
     let reserve0USD = pair.reserve0.times(price0)
     let reserve1USD = pair.reserve1.times(price1)
     if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve0USD.plus(reserve1USD).lt(TARGET_CHAIN.minimumUSDThresholdNewPairs)) {
+      if (reserve0USD.plus(reserve1USD).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
         return ZERO_BD
       }
     }
     if (WHITELIST.includes(token0.id) && !WHITELIST.includes(token1.id)) {
-      if (reserve0USD.times(BigDecimal.fromString('2')).lt(TARGET_CHAIN.minimumUSDThresholdNewPairs)) {
+      if (reserve0USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
         return ZERO_BD
       }
     }
     if (!WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
-      if (reserve1USD.times(BigDecimal.fromString('2')).lt(TARGET_CHAIN.minimumUSDThresholdNewPairs)) {
+      if (reserve1USD.times(BigDecimal.fromString('2')).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {
         return ZERO_BD
       }
     }
