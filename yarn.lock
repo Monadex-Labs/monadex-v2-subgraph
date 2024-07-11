@@ -362,9 +362,9 @@
     wrap-ansi "^7.0.0"
 
 "@oclif/core@^2.15.0":
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.15.0.tgz#f27797b30a77d13279fba88c1698fc34a0bd0d2a"
-  integrity sha512-fNEMG5DzJHhYmI3MgpByTvltBOMyFcnRIUMxbiz2ai8rhaYgaTHMG3Q38HcosfIvtw9nCjxpcQtC8MN8QtVCcA==
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/@oclif/core/-/core-2.16.0.tgz#e6f3c6c359d4313a15403d8652bbdd0e99ce4b3a"
+  integrity sha512-dL6atBH0zCZl1A1IXCKJgLPrM/wR7K+Wi401E/IvqsK8m2iCHW+0TEOGrans/cuN3oTW+uxIyJFHJ8Im0k4qBw==
   dependencies:
     "@types/cli-progress" "^3.11.0"
     ansi-escapes "^4.3.2"
@@ -1721,9 +1721,10 @@ globby@^11.1.0:
     merge2 "^1.4.1"
     slash "^3.0.0"
 
-"gluegun@https://github.com/edgeandnode/gluegun#v4.3.1-pin-colors-dep":
-  version "4.3.1"
-  resolved "https://github.com/edgeandnode/gluegun#b34b9003d7bf556836da41b57ef36eb21570620a"
+gluegun@5.1.6:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/gluegun/-/gluegun-5.1.6.tgz#74ec13193913dc610f5c1a4039972c70c96a7bad"
+  integrity sha512-9zbi4EQWIVvSOftJWquWzr9gLX2kaDgPkNR5dYWbM53eVvCI3iKuxLlnKoHC0v4uPoq+Kr/+F569tjoFbA4DSA==
   dependencies:
     apisauce "^2.1.5"
     app-module-path "^2.2.0"

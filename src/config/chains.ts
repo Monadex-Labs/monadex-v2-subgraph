@@ -33,7 +33,7 @@ class ChainInfo {
     this.factory = factory.toLowerCase()
     this.wrappedNative = wrappedNative.toLowerCase()
     this.wrappedNativeUSDCPool = wrappedNativeUSDCPool.toLowerCase()
-    this.whitelistTokens = whitelistTokens.map((token) => token.toLowerCase())
+    this.whitelistTokens = whitelistTokens
     this.stableCoin = stableCoin.toLowerCase()
     this.startBlock = startBlock
     this.minimumUSDThresholdNewPairs = BigDecimal.fromString(minimumUSDThresholdNewPairs)
