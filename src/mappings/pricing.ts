@@ -21,7 +21,7 @@ export function getEthPriceInUSD(): BigDecimal {
   let usdcPair = Pair.load(WRAPPED_NATIVE_USDC_POOL) // usdc is token0
 
   if (usdcPair !== null) {
-    return usdcPair.token1Price
+    return usdcPair.token0 == STABLE ? usdcPair.token0Price : usdcPair.token1Price
   } else {
     return ZERO_BD
   }
@@ -76,8 +76,13 @@ export function findEthPerTokenWithoutCall(token: Token): BigDecimal {
   if(token.id == STABLE) {
     let pair =  Pair.load(WRAPPED_NATIVE_USDC_POOL)
     if(pair) {
-      let token0 = Token.load(pair.token0) as Token
-      price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
+      if(pair.token0 == STABLE) {
+        let token1 = Token.load(pair.token1) as Token
+        price = pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
+      } else {
+        let token0 = Token.load(pair.token0) as Token
+        price = pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * Eth per token 0
+      }
       return price
     }
   }
