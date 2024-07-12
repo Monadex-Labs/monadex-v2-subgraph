@@ -1,6 +1,7 @@
 // naming in line with subgraph config convention
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
+const XAI = "xai"
 
 class ChainInfo {
   configName: string;
@@ -43,10 +44,12 @@ class ChainInfo {
 class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
+  xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
+    this.xai = xai;
   }
 }
 
@@ -91,15 +94,32 @@ const arbitrumSepolia = new ChainInfo(
   "50"
 )
 
+const xai = new ChainInfo(
+  XAI,
+  "0x18E621B64d7808c3C47bccbbD7485d23F257D26f", // factory
+  "0x3fB787101DC6Be47cfe18aeEe15404dcC842e6AF", // wnative
+  "0xcffa8a7e0a2f1256e4c3ed17a153272f7ba6d7c5", // wnative-stable
+  [
+    "0x3fb787101dc6be47cfe18aeee15404dcc842e6af", // WXAI
+    "0x1e3769bd5fb2e9e9e7d4ed8667c947661f9a82e3", // USDC
+    "0xbee82cfdaff4a6aa4e4793cb81eb1c2e79ac463c" // WETH
+  ], // WL tokens[]
+  "0x1e3769bd5fb2e9e9e7d4ed8667c947661f9a82e3", // main stable
+  2436883, // start block
+  "500", // minUSDThresholdPair
+  "50", // minLiqThresholdETH
+  "5000", // minLiqETH
+)
+
 const supportedChains = new SupportedChains(
   arbitrumOne,
-  arbitrumSepolia
+  arbitrumSepolia,
+  xai
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.arbitrumOne
+const TARGET_CHAIN: ChainInfo = supportedChains.xai
 
 export {
-  TARGET_CHAIN,
-  ARBITRUM_ONE
+  TARGET_CHAIN
 }
