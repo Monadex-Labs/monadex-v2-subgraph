@@ -3,9 +3,8 @@ import path from "path"
 import yaml from "js-yaml"
 
 import {
-  TARGET_CHAIN,
-  ARBITRUM_ONE
-} from "./chains"
+  TARGET_CHAIN
+} from "./chains.ts"
 
 const {
   configName,

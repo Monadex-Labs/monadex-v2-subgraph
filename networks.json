@@ -1,7 +1,7 @@
 {
   "arbitrum-one": {
     "Factory": {
-      "address": "0x6EcCab422D763aC031210895C81787E87B43A652",
+      "address": "0x6eccab422d763ac031210895c81787e87b43a652",
       "startBlock": 35061163
     }
   }

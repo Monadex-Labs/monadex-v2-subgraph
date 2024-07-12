@@ -1,5 +1,3 @@
-import { BigDecimal } from '@graphprotocol/graph-ts/index'
-
 // naming in line with subgraph config convention
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
@@ -12,9 +10,9 @@ class ChainInfo {
   whitelistTokens: Array<string>;
   stableCoin: string;
   startBlock: number;
-  minimumUSDThresholdNewPairs: BigDecimal;
-  minimumLiquidityThresholdETH: BigDecimal;
-  minimumLiquidityETH: BigDecimal;
+  minimumUSDThresholdNewPairs: string;
+  minimumLiquidityThresholdETH: string;
+  minimumLiquidityETH: string;
 
 
   constructor(
@@ -36,9 +34,9 @@ class ChainInfo {
     this.whitelistTokens = whitelistTokens
     this.stableCoin = stableCoin.toLowerCase()
     this.startBlock = startBlock
-    this.minimumUSDThresholdNewPairs = BigDecimal.fromString(minimumUSDThresholdNewPairs)
-    this.minimumLiquidityThresholdETH = BigDecimal.fromString(minimumLiquidityThresholdETH)
-    this.minimumLiquidityETH = BigDecimal.fromString(minimumLiquidityETH)
+    this.minimumUSDThresholdNewPairs = minimumUSDThresholdNewPairs
+    this.minimumLiquidityThresholdETH = minimumLiquidityThresholdETH
+    this.minimumLiquidityETH = minimumLiquidityETH
   }
 }
 

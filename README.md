@@ -12,7 +12,12 @@ This subgraph dynamically tracks any pair created by the uniswap factory. It tra
 
 ## Building & Deploying
 
-Make sure to edit `TARGET_CHAIN` in `src/config/chains.js` to point to the correct chain before running anything. New chains must be declared in `SupportedChains` and declared as a new `ChainInfo` class to satisfy graph's Assembly Script type checking. 
+Make sure to edit `TARGET_CHAIN` in `src/config/chains.js` to point to the correct chain before running anything. New chains must be declared in `SupportedChains` and declared as a new `ChainInfo` class to satisfy graph's Assembly Script type checking.
+
+`yarn set-config`
+`yarn codegen`
+`yarn build`
+`yarn deploy`
 
 ## Queries
 
