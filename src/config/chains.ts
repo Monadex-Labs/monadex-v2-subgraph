@@ -1,6 +1,7 @@
 // naming in line with subgraph config convention
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
+const GRAVITY = "camelot-gravity"
 const RARI = "camelot-rari"
 const REYA = "camelot-reya"
 const SANKO = "camelot-sanko"
@@ -47,14 +48,16 @@ class ChainInfo {
 class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
+  gravity: ChainInfo;
   rari: ChainInfo;
   reya: ChainInfo;
   sanko: ChainInfo;
   xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, gravity: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
+    this.gravity = gravity;
     this.rari = rari;
     this.reya = reya;
     this.sanko = sanko;
@@ -101,6 +104,27 @@ const arbitrumSepolia = new ChainInfo(
   "500",
   "0.5",
   "50"
+)
+
+const gravity = new ChainInfo(
+  GRAVITY,
+  "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
+  "0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30", // WG
+  "0x98989441b74cb44e202681990d3788797be370af", // WG-USDT
+  [
+    "0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30", // WG
+    "0xd03ee9632901d1e355d39158a474fa42b248bc05", // USDT
+    "0x9aea9dbb3e0982d2e7b4933018c3ebc304316752", // USDC
+    "0xe2913e5d24e42303e7d4b2a5bf3f9d2ccd399424", // WETH
+    "0x020462591af819a79a7fc9b075f2f6bfe1233b5b", // USDe
+    "0xbfbbc4da47508e85ac18dfc961fa182194e85f9a", // DAI
+    "0xed244aafce5962cf43cd780b948c11591663d79d", // weETH
+  ],
+  "0xd03ee9632901d1e355d39158a474fa42b248bc05",
+  11985,
+  "500",
+  "100",
+  "100000"
 )
 
 const rari = new ChainInfo(
@@ -173,6 +197,7 @@ const xai = new ChainInfo(
 const supportedChains = new SupportedChains(
   arbitrumOne,
   arbitrumSepolia,
+  gravity,
   rari,
   reya,
   sanko,
@@ -180,7 +205,7 @@ const supportedChains = new SupportedChains(
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.reya
+const TARGET_CHAIN: ChainInfo = supportedChains.gravity
 
 export {
   TARGET_CHAIN
