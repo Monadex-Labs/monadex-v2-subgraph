@@ -1,6 +1,7 @@
 // naming in line with subgraph config convention
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
+const SANKO = "camelot-sanko"
 const XAI = "xai"
 
 class ChainInfo {
@@ -44,11 +45,13 @@ class ChainInfo {
 class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
+  sanko: ChainInfo;
   xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, xai: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
+    this.sanko = sanko;
     this.xai = xai;
   }
 }
@@ -94,6 +97,23 @@ const arbitrumSepolia = new ChainInfo(
   "50"
 )
 
+const sanko = new ChainInfo(
+  SANKO,
+  "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
+  "0x754cdad6f5821077d6915004be2ce05f93d176f8", // wnative
+  "0x1ae55ce2c2ff85ea257786ed992873f4d387b2bb", // WDMT-USDC
+  [
+    "0x754cdad6f5821077d6915004be2ce05f93d176f8", // WDMT
+    "0x13d675bc5e659b11cfa331594cf35a20815dcf02", // USDC
+    "0xe01e3b20c5819cf919f7f1a2b4c18bbfd222f376" // WETH
+  ], // WL tokens[]
+  "0x13d675bc5e659b11cfa331594cf35a20815dcf02", // main stable
+  45, // start block
+  "500", // minUSDThresholdPair
+  "1", // minLiqThresholdETH
+  "5000", // minLiqETH
+)
+
 const xai = new ChainInfo(
   XAI,
   "0x18E621B64d7808c3C47bccbbD7485d23F257D26f", // factory
@@ -114,11 +134,12 @@ const xai = new ChainInfo(
 const supportedChains = new SupportedChains(
   arbitrumOne,
   arbitrumSepolia,
+  sanko,
   xai
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.xai
+const TARGET_CHAIN: ChainInfo = supportedChains.sanko
 
 export {
   TARGET_CHAIN
