@@ -2,6 +2,7 @@
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
 const RARI = "camelot-rari"
+const REYA = "camelot-reya"
 const SANKO = "camelot-sanko"
 const XAI = "xai"
 
@@ -47,13 +48,15 @@ class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
   rari: ChainInfo;
+  reya: ChainInfo;
   sanko: ChainInfo;
   xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, rari: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
     this.rari = rari;
+    this.reya = reya;
     this.sanko = sanko;
     this.xai = xai;
   }
@@ -117,6 +120,22 @@ const rari = new ChainInfo(
   "50"
 )
 
+const reya = new ChainInfo(
+  REYA,
+  "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
+  "0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30", // WETH
+  "0x4f37922db35bbf0d89c3f699c24a3152d6a5d9c0", // WETH-RUSD
+  [
+    "0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30", // WETH
+    "0xa9f32a851b1800742e47725da54a09a7ef2556a3", // RUSD
+  ],
+  "0xa9f32a851b1800742e47725da54a09a7ef2556a3", // RUSD
+  2932158,
+  "500",
+  "0.1",
+  "50"
+)
+
 const sanko = new ChainInfo(
   SANKO,
   "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
@@ -155,12 +174,13 @@ const supportedChains = new SupportedChains(
   arbitrumOne,
   arbitrumSepolia,
   rari,
+  reya,
   sanko,
   xai
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.rari
+const TARGET_CHAIN: ChainInfo = supportedChains.reya
 
 export {
   TARGET_CHAIN
