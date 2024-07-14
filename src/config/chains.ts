@@ -1,6 +1,7 @@
 // naming in line with subgraph config convention
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
+const RARI = "camelot-rari"
 const SANKO = "camelot-sanko"
 const XAI = "xai"
 
@@ -45,12 +46,14 @@ class ChainInfo {
 class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
+  rari: ChainInfo;
   sanko: ChainInfo;
   xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, rari: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
+    this.rari = rari;
     this.sanko = sanko;
     this.xai = xai;
   }
@@ -97,10 +100,27 @@ const arbitrumSepolia = new ChainInfo(
   "50"
 )
 
+const rari = new ChainInfo(
+  RARI,
+  "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
+  "0xf037540e51d71b2d2b1120e8432ba49f29edfbd0", // WETH
+  "0xa984428c00c878367b12cd49895bf6318734831e", // WETH-USDC
+  [
+    "0xf037540e51d71b2d2b1120e8432ba49f29edfbd0", // WETH
+    "0xfbda5f676cb37624f28265a144a48b0d6e87d3b6", // USDC
+    "0x362fae9a75b27bbc550aac28a7c1f96c8d483120", // USDT
+  ],
+  "0xfbda5f676cb37624f28265a144a48b0d6e87d3b6",
+  340544,
+  "500",
+  "0.1",
+  "50"
+)
+
 const sanko = new ChainInfo(
   SANKO,
   "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
-  "0x754cdad6f5821077d6915004be2ce05f93d176f8", // wnative
+  "0x754cdad6f5821077d6915004be2ce05f93d176f8", // WDMT
   "0x1ae55ce2c2ff85ea257786ed992873f4d387b2bb", // WDMT-USDC
   [
     "0x754cdad6f5821077d6915004be2ce05f93d176f8", // WDMT
@@ -134,12 +154,13 @@ const xai = new ChainInfo(
 const supportedChains = new SupportedChains(
   arbitrumOne,
   arbitrumSepolia,
+  rari,
   sanko,
   xai
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.sanko
+const TARGET_CHAIN: ChainInfo = supportedChains.rari
 
 export {
   TARGET_CHAIN
