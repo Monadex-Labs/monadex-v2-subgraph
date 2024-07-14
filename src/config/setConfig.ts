@@ -19,7 +19,7 @@ let subgraphConfig = fs.readFileSync(subgraphPath, 'utf8');
 let subgraph = yaml.load(subgraphConfig) as any;
 
 const subgraphFactory = subgraph.dataSources[0] as any
-subgraphFactory.network = configName,
+subgraphFactory.network = configName
 subgraphFactory.source.address = factory
 subgraphFactory.source.startBlock = startBlock
 subgraph.templates[0].network = configName
