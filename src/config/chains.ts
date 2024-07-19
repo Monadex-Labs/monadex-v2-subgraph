@@ -2,6 +2,7 @@
 const ARBITRUM_ONE = "arbitrum-one"
 const ARBITRUM_SEPOLIA = "arbitrum-sepolia"
 const GRAVITY = "camelot-gravity"
+const PROOF_OF_PLAY = "camelot-proofofplay-apex"
 const RARI = "camelot-rari"
 const REYA = "camelot-reya"
 const SANKO = "camelot-sanko"
@@ -49,15 +50,17 @@ class SupportedChains {
   arbitrumOne: ChainInfo;
   arbitrumSepolia: ChainInfo;
   gravity: ChainInfo;
+  proofOfPlay: ChainInfo;
   rari: ChainInfo;
   reya: ChainInfo;
   sanko: ChainInfo;
   xai: ChainInfo;
 
-  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, gravity: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
+  constructor(arbitrumOne: ChainInfo, arbitrumSepolia: ChainInfo, gravity: ChainInfo, proofOfPlay: ChainInfo, rari: ChainInfo, reya: ChainInfo, sanko: ChainInfo, xai: ChainInfo) {
     this.arbitrumOne = arbitrumOne;
     this.arbitrumSepolia = arbitrumSepolia;
     this.gravity = gravity;
+    this.proofOfPlay = proofOfPlay;
     this.rari = rari;
     this.reya = reya;
     this.sanko = sanko;
@@ -125,6 +128,22 @@ const gravity = new ChainInfo(
   "500",
   "100",
   "100000"
+)
+
+const proofOfPlay = new ChainInfo(
+  PROOF_OF_PLAY,
+  "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
+  "0x77684A04145a5924eFCE0D92A7c4a2A2E8C359de", // WETH
+  "0x8B58441D8787d95BD629a011176a4D6054805876", // WETH-USDC
+  [
+    "0x77684A04145a5924eFCE0D92A7c4a2A2E8C359de", // WETH
+    "0xd7f991cF407C877dc91b2C6aCade45643925cf7a", // USDC
+  ],
+  "0xd7f991cF407C877dc91b2C6aCade45643925cf7a", // USDC
+  26275551,
+  "500",
+  "0.1",
+  "50"
 )
 
 const rari = new ChainInfo(
@@ -198,6 +217,7 @@ const supportedChains = new SupportedChains(
   arbitrumOne,
   arbitrumSepolia,
   gravity,
+  proofOfPlay,
   rari,
   reya,
   sanko,
@@ -205,7 +225,7 @@ const supportedChains = new SupportedChains(
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.gravity
+const TARGET_CHAIN: ChainInfo = supportedChains.proofOfPlay
 
 export {
   TARGET_CHAIN
