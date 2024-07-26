@@ -112,18 +112,17 @@ const arbitrumSepolia = new ChainInfo(
 const gravity = new ChainInfo(
   GRAVITY,
   "0x7d8c6B58BA2d40FC6E34C25f9A488067Fe0D2dB4", // factory
-  "0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30", // WG
-  "0x98989441b74cb44e202681990d3788797be370af", // WG-USDT
+  "0xBB859E225ac8Fb6BE1C7e38D87b767e95Fef0EbD", // WG
+  "0xA67C07b61dBB705441A1f09cA6D405317175c2b1", // WG-USDC
   [
-    "0x6b48c2e6a32077ec17e8ba0d98ffc676dfab1a30", // WG
-    "0xd03ee9632901d1e355d39158a474fa42b248bc05", // USDT
-    "0x9aea9dbb3e0982d2e7b4933018c3ebc304316752", // USDC
-    "0xe2913e5d24e42303e7d4b2a5bf3f9d2ccd399424", // WETH
-    "0x020462591af819a79a7fc9b075f2f6bfe1233b5b", // USDe
-    "0xbfbbc4da47508e85ac18dfc961fa182194e85f9a", // DAI
-    "0xed244aafce5962cf43cd780b948c11591663d79d", // weETH
+    "0xBB859E225ac8Fb6BE1C7e38D87b767e95Fef0EbD", // WG
+    "0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6", // USDC
+    "0x816E810f9F787d669FB71932DeabF6c83781Cd48", // USDT
+    "0xf6f832466Cd6C21967E0D954109403f36Bc8ceaA", // WETH
+    "0x729ed87bbE7B7e4B7F09BCb9c668580818d98BB9", // WBTC
+    "0xBFBBc4dA47508e85AC18DFC961fa182194E85f9a", // DAI
   ],
-  "0xd03ee9632901d1e355d39158a474fa42b248bc05",
+  "0xFbDa5F676cB37624f28265A144A48B0d6e87d3b6", // USDC
   11985,
   "500",
   "100",
@@ -225,7 +224,7 @@ const supportedChains = new SupportedChains(
 )
 
 // Edit this for the given deployment
-const TARGET_CHAIN: ChainInfo = supportedChains.proofOfPlay
+const TARGET_CHAIN: ChainInfo = supportedChains.gravity
 
 export {
   TARGET_CHAIN
