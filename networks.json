@@ -1,8 +1,8 @@
 {
-  "arbitrum-one": {
+  "sepolia": {
     "Factory": {
-      "address": "0x6eccab422d763ac031210895c81787e87b43a652",
-      "startBlock": 35061163
+      "address": "0x3FB48a9b88685Fb14DcfBE65553200b1790964E1",
+      "startBlock": 6536001
     }
   }
 }
