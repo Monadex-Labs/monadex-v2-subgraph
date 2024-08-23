@@ -12,13 +12,11 @@ import {
 } from '../../generated/schema'
 import {
   Pair as PairContract,
-  Mint,
-  Burn,
-  Swap,
+  LiquidityAdded as Mint,
+  LiquidityRemoved as Burn,
+  AmountSwapped as Swap,
   Transfer,
-  Sync,
-  FeePercentUpdated,
-  SetStableSwap
+  ReservesUpdated as Sync,
 } from '../../generated/templates/Pair/Pair'
 import { updatePairDayData, updateTokenDayData, updateUniswapDayData, updatePairHourData } from './dayUpdates'
 import {
@@ -41,10 +39,6 @@ import {
   ZERO_BD,
   BI_18,
 } from "./constants"
-
-import {PriceConsumer} from "../../generated/templates/Pair/PriceConsumer";
-
-let priceConsumerContract = PriceConsumer.bind(Address.fromString('0x2fa124Ce75170247c77c6e59367b0d401Dd74741'))
 
 function isCompleteMint(mintId: string): boolean {
   const mint = MintEvent.load(mintId)
@@ -251,59 +245,13 @@ export function handleSync(event: Sync): void {
   token0.totalLiquidity = token0.totalLiquidity.minus(pair.reserve0)
   token1.totalLiquidity = token1.totalLiquidity.minus(pair.reserve1)
 
-  pair.reserve0 = convertTokenToDecimal(event.params.reserve0, token0.decimals)
-  pair.reserve1 = convertTokenToDecimal(event.params.reserve1, token1.decimals)
+  pair.reserve0 = convertTokenToDecimal(event.params.reserveA, token0.decimals)
+  pair.reserve1 = convertTokenToDecimal(event.params.reserveB, token1.decimals)
 
-  if (pair.reserve1.notEqual(ZERO_BD)) {
-    if(pair.isStable) {
-      let result = priceConsumerContract.try_getAmountOut(
-          exponentToBigInt(token1.decimals.minus(BigInt.fromI32(2))),
-          Address.fromString(pair.token1),
-          event.address,
-          event.params.reserve0,
-          event.params.reserve1,
-          exponentToBigInt(token0.decimals),
-          exponentToBigInt(token1.decimals)
-      )
-      let price0: BigInt
-      if (result.reverted) {
-        price0 = pairContract.getAmountOut(
-            BigInt.fromI32(100000).plus(pair.token0Fee).times(exponentToBigInt(token1.decimals.minus(BigInt.fromI32(2)))).div(BigInt.fromI32(100000)),
-            Address.fromString(pair.token1)
-        ).times(BigInt.fromI32(100))
-      } else price0 = result.value.times(BigInt.fromI32(100))
-      pair.token0Price = convertTokenToDecimal(price0, token0.decimals)
-    }
-    else {
-      pair.token0Price = pair.reserve0.div(pair.reserve1)
-    }
-  }
-  else pair.token0Price = ZERO_BD
-  if (pair.reserve0.notEqual(ZERO_BD)) {
-    if(pair.isStable) {
-      let result = priceConsumerContract.try_getAmountOut(
-          exponentToBigInt(token0.decimals.minus(BigInt.fromI32(2))),
-          Address.fromString(pair.token0),
-          event.address,
-          event.params.reserve0,
-          event.params.reserve1,
-          exponentToBigInt(token0.decimals),
-          exponentToBigInt(token1.decimals)
-      )
-      let price1: BigInt
-      if (result.reverted) {
-        price1 = pairContract.getAmountOut(
-            BigInt.fromI32(100000).plus(pair.token1Fee).times(exponentToBigInt(token0.decimals.minus(BigInt.fromI32(2)))).div(BigInt.fromI32(100000)),
-            Address.fromString(pair.token0)
-        ).times(BigInt.fromI32(100))
-      } else price1 = result.value.times(BigInt.fromI32(100))
-      pair.token1Price = convertTokenToDecimal(price1, token1.decimals)
-    }
-    else {
-      pair.token1Price = pair.reserve1.div(pair.reserve0)
-    }
-  }
-  else pair.token1Price = ZERO_BD
+  if (pair.reserve1.notEqual(ZERO_BD)) pair.token0Price = pair.reserve0.div(pair.reserve1)
+    else pair.token0Price = ZERO_BD
+  if (pair.reserve0.notEqual(ZERO_BD)) pair.token1Price = pair.reserve1.div(pair.reserve0)
+    else pair.token1Price = ZERO_BD
 
   pair.save()
 
@@ -366,8 +314,8 @@ export function handleMint(event: Mint): void {
   let token1 = Token.load(pair.token1) as Token
 
   // update exchange info (except balances, sync will cover that)
-  let token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals)
-  let token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals)
+  let token0Amount = convertTokenToDecimal(event.params.amountA, token0.decimals)
+  let token1Amount = convertTokenToDecimal(event.params.amountB, token1.decimals)
 
   // update txn counts
   token0.txCount = token0.txCount.plus(ONE_BI)
@@ -395,7 +343,7 @@ export function handleMint(event: Mint): void {
   pair.save()
   uniswap.save()
 
-  mint.sender = event.params.sender
+  mint.sender = event.params.by
   mint.amount0 = token0Amount as BigDecimal
   mint.amount1 = token1Amount as BigDecimal
   mint.logIndex = event.logIndex
@@ -437,8 +385,8 @@ export function handleBurn(event: Burn): void {
   let token0 = Token.load(pair.token0) as Token
   let token1 = Token.load(pair.token1) as Token
 
-  let token0Amount = convertTokenToDecimal(event.params.amount0, token0.decimals)
-  let token1Amount = convertTokenToDecimal(event.params.amount1, token1.decimals)
+  let token0Amount = convertTokenToDecimal(event.params.amountA, token0.decimals)
+  let token1Amount = convertTokenToDecimal(event.params.amountB, token1.decimals)
 
   // update txn counts
   token0.txCount = token0.txCount.plus(ONE_BI)
@@ -460,7 +408,7 @@ export function handleBurn(event: Burn): void {
   uniswap.save()
 
   // update burn
-  if(!burn.sender) burn.sender = event.params.sender
+  if(!burn.sender) burn.sender = event.params.by
   burn.amount0 = token0Amount as BigDecimal
   burn.amount1 = token1Amount as BigDecimal
   // burn.to = event.params.to
@@ -485,10 +433,10 @@ export function handleSwap(event: Swap): void {
 
   let token0 = Token.load(pair.token0) as Token
   let token1 = Token.load(pair.token1) as Token
-  let amount0In = convertTokenToDecimal(event.params.amount0In, token0.decimals)
-  let amount1In = convertTokenToDecimal(event.params.amount1In, token1.decimals)
-  let amount0Out = convertTokenToDecimal(event.params.amount0Out, token0.decimals)
-  let amount1Out = convertTokenToDecimal(event.params.amount1Out, token1.decimals)
+  let amount0In = convertTokenToDecimal(event.params.amountAIn, token0.decimals)
+  let amount1In = convertTokenToDecimal(event.params.amountBIn, token1.decimals)
+  let amount0Out = convertTokenToDecimal(event.params.amountAOut, token0.decimals)
+  let amount1Out = convertTokenToDecimal(event.params.amountBOut, token1.decimals)
 
   // totals for volume updates
   let amount0Total = amount0Out.plus(amount0In)
@@ -581,12 +529,12 @@ export function handleSwap(event: Swap): void {
   swap.pair = pair.id
   swap.timestamp = transaction.timestamp
   swap.transaction = transaction.id
-  swap.sender = event.params.sender
+  swap.sender = event.params.caller
   swap.amount0In = amount0In
   swap.amount1In = amount1In
   swap.amount0Out = amount0Out
   swap.amount1Out = amount1Out
-  swap.to = event.params.to
+  swap.to = event.params._receiver
   swap.from = event.transaction.from
   swap.logIndex = event.logIndex
   // use the tracked amount if we have it
@@ -644,20 +592,4 @@ export function handleSwap(event: Swap): void {
     amount1Total.times(token1.derivedETH as BigDecimal).times(bundle.ethPrice)
   )
   token1DayData.save()
-}
-
-export function handleTypeSwitch(event: SetStableSwap): void {
-  let pair = Pair.load(event.address.toHexString()) as Pair
-  pair.isStable = event.params.stableSwap
-  pair.save()
-}
-
-export function handleFeePercentUpdated(event: FeePercentUpdated): void {
-  let pair = Pair.load(event.address.toHexString()) as Pair
-
-  pair.token0Fee = BigInt.fromI32(event.params.token0FeePercent)
-  pair.token1Fee = BigInt.fromI32(event.params.token1FeePercent)
-  pair.token0FeePercent = BigInt.fromI32(event.params.token0FeePercent).toBigDecimal().div(BigDecimal.fromString('1000'))
-  pair.token1FeePercent = BigInt.fromI32(event.params.token1FeePercent).toBigDecimal().div(BigDecimal.fromString('1000'))
-  pair.save()
 }

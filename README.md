@@ -23,11 +23,13 @@ Make sure to edit `TARGET_CHAIN` in `src/config/chains.js` to point to the corre
 
 Below are a few ways to show how to query the uniswap-subgraph for data. The queries show most of the information that is queryable, but there are many other filtering options that can be used, just check out the [querying api](https://thegraph.com/docs/graphql-api). These queries can be used locally or in The Graph Explorer playground.
 
+## MONADEX PLAYGROUND LINK
+[link](https://api.studio.thegraph.com/query/87201/monadexv1/v0.0.1)
 ## Key Entity Overviews
 
-#### UniswapFactory
+#### MonadexFactory
 
-Contains data across all of Uniswap V2. This entity tracks important things like total liquidity (in ETH and USD, see below), all time volume, transaction count, number of pairs and more.
+Contains data across all of Monadex V1. This entity tracks important things like total liquidity (in MONAD and USD, see below), all time volume, transaction count, number of pairs and more.
 
 #### Token
 
@@ -47,7 +49,7 @@ These contain specifc information about a transaction. Things like which pair tr
 
 ## Example Queries
 
-### Querying Aggregated Uniswap Data
+### Querying Aggregated Monadex Data
 
 This query fetches aggredated data from all uniswap pairs and tokens, to give a view into how much activity is happening within the whole protocol.
 
