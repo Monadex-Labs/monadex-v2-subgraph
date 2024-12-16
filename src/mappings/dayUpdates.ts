@@ -1,31 +1,32 @@
 import { PairHourData } from './../types/schema'
 /* eslint-disable prefer-const */
 import { BigInt, BigDecimal, ethereum } from '@graphprotocol/graph-ts'
-import { Pair, Bundle, Token, UniswapFactory, UniswapDayData, PairDayData, TokenDayData } from '../types/schema'
+import { Pair, Bundle, Token, MonaFactory, MonadexDayData, PairDayData, TokenDayData } from '../types/schema'
 import { ONE_BI, ZERO_BD, ZERO_BI, FACTORY_ADDRESS } from './helpers'
 
-export function updateUniswapDayData(uniswap: UniswapFactory, event: ethereum.Event): UniswapDayData {
-  // let uniswap = UniswapFactory.load(FACTORY_ADDRESS)
+export function updateMonadexDayData(monadex: MonadexDayData, event: ethereum.Event): MonadexDayData {
+  // let monadex = UniswapFactory.load(FACTORY_ADDRESS)
   let timestamp = event.block.timestamp.toI32()
   let dayID = timestamp / 86400
   let dayStartTimestamp = dayID * 86400
-  let uniswapDayData = UniswapDayData.load(dayID.toString())
-  if (uniswapDayData === null) {
-    uniswapDayData = new UniswapDayData(dayID.toString())
-    uniswapDayData.date = dayStartTimestamp
-    uniswapDayData.dailyVolumeUSD = ZERO_BD
-    uniswapDayData.dailyVolumeETH = ZERO_BD
-    uniswapDayData.totalVolumeUSD = ZERO_BD
-    uniswapDayData.totalVolumeETH = ZERO_BD
-    uniswapDayData.dailyVolumeUntracked = ZERO_BD
+  let monadexDayData = MonadexDayData.load(dayID.toString())
+  if (monadexDayData === null) {
+    monadexDayData = new MonadexDayData(dayID.toString())
+    monadexDayData.date = dayStartTimestamp
+    monadexDayData.factory = monadex.factory
+    monadexDayData.dailyVolumeUSD = ZERO_BD
+    monadexDayData.dailyVolumeMON = ZERO_BD
+    monadexDayData.totalVolumeUSD = ZERO_BD
+    monadexDayData.totalVolumeMON = ZERO_BD
+    monadexDayData.dailyVolumeUntracked = ZERO_BD
   }
 
-  uniswapDayData.totalLiquidityUSD = uniswap.totalLiquidityUSD
-  uniswapDayData.totalLiquidityETH = uniswap.totalLiquidityETH
-  uniswapDayData.txCount = uniswap.txCount
-  //uniswapDayData.save()
+  monadexDayData.totalLiquidityUSD = monadex.totalLiquidityUSD
+  monadexDayData.totalLiquidityMON = monadex.totalLiquidityMON
+  monadexDayData.txCount = monadex.txCount
+  //monadexDayData.save()
 
-  return uniswapDayData as UniswapDayData
+  return monadexDayData as MonadexDayData
 }
 
 export function updatePairDayData(pair: Pair, event: ethereum.Event): PairDayData {
@@ -103,17 +104,17 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, bundle: 
     tokenDayData = new TokenDayData(tokenDayID)
     tokenDayData.date = dayStartTimestamp
     tokenDayData.token = token.id
-    tokenDayData.priceUSD = (token.derivedETH as BigDecimal).times(bundle.ethPrice)
+    tokenDayData.priceUSD = (token.derivedMON as BigDecimal).times(bundle.monPrice)
     tokenDayData.dailyVolumeToken = ZERO_BD
-    tokenDayData.dailyVolumeETH = ZERO_BD
+    tokenDayData.dailyVolumeMON = ZERO_BD
     tokenDayData.dailyVolumeUSD = ZERO_BD
     tokenDayData.dailyTxns = ZERO_BI
     tokenDayData.totalLiquidityUSD = ZERO_BD
   }
-  tokenDayData.priceUSD = (token.derivedETH as BigDecimal).times(bundle.ethPrice)
+  tokenDayData.priceUSD = (token.derivedMON as BigDecimal).times(bundle.monPrice)
   tokenDayData.totalLiquidityToken = token.totalLiquidity
-  tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
-  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)
+  tokenDayData.totalLiquidityMON = token.totalLiquidity.times(token.derivedMON as BigDecimal)
+  tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityMON.times(bundle.monPrice)
   tokenDayData.dailyTxns = tokenDayData.dailyTxns.plus(ONE_BI)
   //tokenDayData.save()
 

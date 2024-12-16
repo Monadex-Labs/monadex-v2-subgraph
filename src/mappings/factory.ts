@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
 import { log } from '@graphprotocol/graph-ts'
-import { UniswapFactory, Pair, Token, Bundle } from '../types/schema'
+import { MonaFactory, Pair, Token, Bundle } from '../types/schema'
 import { PoolCreated } from '../types/Factory/Factory'
 import { Pair as PairTemplate } from '../types/templates'
 import {
@@ -135,19 +135,21 @@ import { isOnBlacklist, isOnWhitelist } from './pricing'
 //   factory.save()
 // }
 export function handleNewPair(event: PoolCreated): void {
-  let factory = UniswapFactory.load(FACTORY_ADDRESS);
+  let factory = MonaFactory.load(FACTORY_ADDRESS);
   if (factory === null) {
-    factory = new UniswapFactory(FACTORY_ADDRESS);
+    factory = new MonaFactory(FACTORY_ADDRESS);
     factory.pairCount = 0;
-    factory.totalVolumeETH = ZERO_BD;
-    factory.totalLiquidityETH = ZERO_BD;
+    factory.totalVolumeMON = ZERO_BD;
+    factory.totalLiquidityMON = ZERO_BD;
+    factory.totalValueLockedMON = ZERO_BD;
+    factory.totalLiquidityUSD = ZERO_BD;
     factory.totalVolumeUSD = ZERO_BD;
     factory.untrackedVolumeUSD = ZERO_BD;
     factory.totalLiquidityUSD = ZERO_BD;
     factory.txCount = ZERO_BI;
 
     let bundle = new Bundle('1');
-    bundle.ethPrice = ZERO_BD;
+    bundle.monPrice = ZERO_BD;
     bundle.save();
 
     factory.save(); // Save factory after initialization
@@ -173,7 +175,9 @@ export function handleNewPair(event: PoolCreated): void {
     }
 
     token0.decimals = decimals;
-    token0.derivedETH = ZERO_BD;
+    token0.derivedMON = ZERO_BD;
+    token0.totalValueLocked = ZERO_BD;
+    token0.totalValueLockedUSD = ZERO_BD;
     token0.tradeVolume = ZERO_BD;
     token0.tradeVolumeUSD = ZERO_BD;
     token0.untrackedVolumeUSD = ZERO_BD;
@@ -197,7 +201,9 @@ export function handleNewPair(event: PoolCreated): void {
     }
 
     token1.decimals = decimals;
-    token1.derivedETH = ZERO_BD;
+    token1.derivedMON = ZERO_BD;
+    token1.totalValueLocked = ZERO_BD;
+    token1.totalValueLockedUSD = ZERO_BD;
     token1.tradeVolume = ZERO_BD;
     token1.tradeVolumeUSD = ZERO_BD;
     token1.untrackedVolumeUSD = ZERO_BD;
@@ -227,8 +233,10 @@ export function handleNewPair(event: PoolCreated): void {
   pair.txCount = ZERO_BI;
   pair.s_reserveA = ZERO_BD;
   pair.s_reserveB = ZERO_BD;
-  pair.trackedReserveETH = ZERO_BD;
-  pair.reserveETH = ZERO_BD;
+  pair.trackedReserveMON = ZERO_BD;
+  pair.reserveMON = ZERO_BD;
+  pair.totalValueLockedMON = ZERO_BD;
+  pair.totalValueLockedUSD = ZERO_BD;
   pair.reserveUSD = ZERO_BD;
   pair.totalSupply = ZERO_BD;
   pair.volumeToken0 = ZERO_BD;

@@ -4,13 +4,13 @@ import { BigDecimal } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, ONE_BD } from './helpers'
 
 const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
-const USDC_WETH_PAIR = '0x0fee29dba85391ad8d117fb9655b68116f2665d3' 
+const USDC_WMON_PAIR = '0x0fee29dba85391ad8d117fb9655b68116f2665d3' 
 const USDT_WETH_PAIR = '' 
 
 
 export function getEthPriceInUSD(): BigDecimal {
   //For now we will only use USDC_WETH pair for ETH prices
-  let usdcPair = Pair.load(USDC_WETH_PAIR);
+  let usdcPair = Pair.load(USDC_WMON_PAIR);
   if (usdcPair !== null) {
     return usdcPair.token0Price
   }
@@ -91,13 +91,13 @@ export function findEthPerToken(token: Token): BigDecimal {
   for (let i = 0; i < whitelist.length; ++i) {
       let pairAddress = whitelist[i] as string
       let pair = Pair.load(pairAddress) as Pair
-      if (pair.s_tokenA == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+      if (pair.s_tokenA == token.id && pair.reserveMON.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token1 = Token.load(pair.s_tokenB) as Token
-        return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
+        return pair.token1Price.times(token1.derivedMON as BigDecimal) // return token1 per our token * Eth per token 1
       }
-      if (pair.s_tokenB == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+      if (pair.s_tokenB == token.id && pair.reserveMON.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
         let token0 = Token.load(pair.s_tokenA) as Token
-        return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
+        return pair.token0Price.times(token0.derivedMON as BigDecimal) // return token0 per our token * ETH per token 0
       }
   }
   return ZERO_BD // nothing was found return 0
@@ -116,8 +116,8 @@ export function getTrackedVolumeUSD(
   token1: Token,
   bundle: Bundle
 ): BigDecimal {
-  let price0 = (token0.derivedETH as BigDecimal).times(bundle.ethPrice)
-  let price1 = (token1.derivedETH as BigDecimal).times(bundle.ethPrice)
+  let price0 = (token0.derivedMON as BigDecimal).times(bundle.monPrice)
+  let price1 = (token1.derivedMON as BigDecimal).times(bundle.monPrice)
 
   // if less than 1 LPs, require high minimum reserve amount amount or return 0
   /**if (pair.liquidityProviderCount.lt(BigInt.fromI32(1))) {
@@ -175,8 +175,8 @@ export function getTrackedLiquidityUSD(
   token1: Token,
   bundle: Bundle
 ): BigDecimal {
-  let price0 = (token0.derivedETH as BigDecimal).times(bundle.ethPrice)
-  let price1 = (token1.derivedETH as BigDecimal).times(bundle.ethPrice) 
+  let price0 = (token0.derivedMON as BigDecimal).times(bundle.monPrice)
+  let price1 = (token1.derivedMON as BigDecimal).times(bundle.monPrice) 
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
