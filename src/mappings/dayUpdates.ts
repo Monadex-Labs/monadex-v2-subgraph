@@ -41,8 +41,8 @@ export function updatePairDayData(pair: Pair, event: ethereum.Event): PairDayDat
   if (pairDayData === null) {
     pairDayData = new PairDayData(dayPairID)
     pairDayData.date = dayStartTimestamp
-    pairDayData.token0 = pair.token0
-    pairDayData.token1 = pair.token1
+    pairDayData.token0 = pair.s_tokenA
+    pairDayData.token1 = pair.s_tokenB
     pairDayData.pairAddress = event.address
     pairDayData.dailyVolumeToken0 = ZERO_BD
     pairDayData.dailyVolumeToken1 = ZERO_BD
@@ -51,8 +51,8 @@ export function updatePairDayData(pair: Pair, event: ethereum.Event): PairDayDat
   }
 
   pairDayData.totalSupply = pair.totalSupply
-  pairDayData.reserve0 = pair.reserve0
-  pairDayData.reserve1 = pair.reserve1
+  pairDayData.reserve0 = pair.s_reserveA
+  pairDayData.reserve1 = pair.s_reserveB
   pairDayData.reserveUSD = pair.reserveUSD
   pairDayData.dailyTxns = pairDayData.dailyTxns.plus(ONE_BI)
   //pairDayData.save()
@@ -80,8 +80,8 @@ export function updatePairHourData(pair: Pair, event: ethereum.Event): PairHourD
     pairHourData.hourlyTxns = ZERO_BI
   }
 
-  pairHourData.reserve0 = pair.reserve0
-  pairHourData.reserve1 = pair.reserve1
+  pairHourData.reserve0 = pair.s_reserveA
+  pairHourData.reserve1 = pair.s_reserveB
   pairHourData.reserveUSD = pair.reserveUSD
   pairHourData.hourlyTxns = pairHourData.hourlyTxns.plus(ONE_BI)
   //pairHourData.save()
@@ -103,14 +103,14 @@ export function updateTokenDayData(token: Token, event: ethereum.Event, bundle: 
     tokenDayData = new TokenDayData(tokenDayID)
     tokenDayData.date = dayStartTimestamp
     tokenDayData.token = token.id
-    tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+    tokenDayData.priceUSD = (token.derivedETH as BigDecimal).times(bundle.ethPrice)
     tokenDayData.dailyVolumeToken = ZERO_BD
     tokenDayData.dailyVolumeETH = ZERO_BD
     tokenDayData.dailyVolumeUSD = ZERO_BD
     tokenDayData.dailyTxns = ZERO_BI
     tokenDayData.totalLiquidityUSD = ZERO_BD
   }
-  tokenDayData.priceUSD = token.derivedETH.times(bundle.ethPrice)
+  tokenDayData.priceUSD = (token.derivedETH as BigDecimal).times(bundle.ethPrice)
   tokenDayData.totalLiquidityToken = token.totalLiquidity
   tokenDayData.totalLiquidityETH = token.totalLiquidity.times(token.derivedETH as BigDecimal)
   tokenDayData.totalLiquidityUSD = tokenDayData.totalLiquidityETH.times(bundle.ethPrice)

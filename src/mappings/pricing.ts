@@ -3,10 +3,9 @@ import { Pair, Token, Bundle } from '../types/schema'
 import { BigDecimal } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, ONE_BD } from './helpers'
 
-const WETH_ADDRESS = '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619'
-const USDC_WETH_PAIR = '0x853ee4b2a13f8a742d64c8f088be7ba2131f670d' // created 10008355
-const DAI_WETH_PAIR = '0x4a35582a710e1f4b2030a3f826da20bfb6703c09' // created block 10042267
-const USDT_WETH_PAIR = '0xf6422b997c7f54d1c6a6e103bcb1499eea0a7046' // created block 10093341
+const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
+const USDC_WETH_PAIR = '0x0fee29dba85391ad8d117fb9655b68116f2665d3' 
+const USDT_WETH_PAIR = '' 
 
 
 export function getEthPriceInUSD(): BigDecimal {
@@ -49,24 +48,14 @@ export function getEthPriceInUSD(): BigDecimal {
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-  '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', // WETH
-  '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', // USDC
-  '0x831753dd7087cac61ab5644b308642cc1c33dc13', //QUICK
-  '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270', //WMATIC
-  '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6', //WBTC
-  '0x8f3cf7ad23cd3cadbd9735aff958023239c6a063', // DAI
-  '0xc2132d05d31c914a87c6611c10748aeb04b58e8f', // USDT
-  '0x9719d867a500ef117cc201206b8ab51e794d3f82', //MAUSDC
-  '0x104592a158490a9228070e0a8e5343b499e125d0', //FRAX
-  '0x033d942a6b495c4071083f4cde1f17e986fe856c', //AGA
-  '0xd6df932a45c0f255f85145f286ea0b292b21c90b', //AAVE
-  '0xa7051c5a22d963b81d71c2ba64d46a877fbc1821', //EROWAN
-  '0x8497842420cfdbc97896c2353d75d89fc8d5be5d' //VERSA
+    '0x4200000000000000000000000000000000000006', // WETH
+    '0xe7ac0e38a0baafeb3e5cba94e2fbae44511d0f8a', // MDX
+    '0x036cbd53842c5426634e7929541ec2318f3dcf7e', // USDC
+    '0x7169d38820dfd117c3fa1f22a697dba58d90ba06', // USDT
+    '0x49d75bb3ef83bdd83bef36aea14f9421e6b05603' // PEPE
 ]
 
-let BLACKLIST: string[] = [
-  "0x5d76fa95c308fce88d347556785dd1dd44416272"
-]
+let BLACKLIST: string[] = []
 
 export function isOnWhitelist(token: string): boolean {
   for(var i = 0; i < WHITELIST.length; i++) {
@@ -100,14 +89,14 @@ export function findEthPerToken(token: Token): BigDecimal {
   // loop through whitelist and check if paired with any
   let whitelist = token.whitelist
   for (let i = 0; i < whitelist.length; ++i) {
-      let pairAddress = whitelist[i]
-      let pair = Pair.load(pairAddress)
-      if (pair.token0 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token1 = Token.load(pair.token1)
+      let pairAddress = whitelist[i] as string
+      let pair = Pair.load(pairAddress) as Pair
+      if (pair.s_tokenA == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+        let token1 = Token.load(pair.s_tokenB) as Token
         return pair.token1Price.times(token1.derivedETH as BigDecimal) // return token1 per our token * Eth per token 1
       }
-      if (pair.token1 == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
-        let token0 = Token.load(pair.token0)
+      if (pair.s_tokenB == token.id && pair.reserveETH.gt(MINIMUM_LIQUIDITY_THRESHOLD_ETH)) {
+        let token0 = Token.load(pair.s_tokenA) as Token
         return pair.token0Price.times(token0.derivedETH as BigDecimal) // return token0 per our token * ETH per token 0
       }
   }
@@ -127,8 +116,8 @@ export function getTrackedVolumeUSD(
   token1: Token,
   bundle: Bundle
 ): BigDecimal {
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = (token0.derivedETH as BigDecimal).times(bundle.ethPrice)
+  let price1 = (token1.derivedETH as BigDecimal).times(bundle.ethPrice)
 
   // if less than 1 LPs, require high minimum reserve amount amount or return 0
   /**if (pair.liquidityProviderCount.lt(BigInt.fromI32(1))) {
@@ -186,8 +175,8 @@ export function getTrackedLiquidityUSD(
   token1: Token,
   bundle: Bundle
 ): BigDecimal {
-  let price0 = token0.derivedETH.times(bundle.ethPrice)
-  let price1 = token1.derivedETH.times(bundle.ethPrice)
+  let price0 = (token0.derivedETH as BigDecimal).times(bundle.ethPrice)
+  let price1 = (token1.derivedETH as BigDecimal).times(bundle.ethPrice) 
 
   // both are whitelist tokens, take average of both amounts
   if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
