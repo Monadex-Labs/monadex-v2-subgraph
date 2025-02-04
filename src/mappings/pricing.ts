@@ -3,9 +3,8 @@ import { Pair, Token, Bundle } from '../types/schema'
 import { BigDecimal } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, ONE_BD } from './helpers'
 
-const WETH_ADDRESS = '0x4200000000000000000000000000000000000006'
-const USDC_WETH_PAIR = '0x0fee29dba85391ad8d117fb9655b68116f2665d3' 
-const USDT_WETH_PAIR = '' 
+const WETH_ADDRESS = '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701'
+const USDC_WETH_PAIR = '0x13a0dCC7831De6F986019D82211F4c3f07d9c2ca' 
 
 
 export function getEthPriceInUSD(): BigDecimal {
@@ -48,11 +47,11 @@ export function getEthPriceInUSD(): BigDecimal {
 
 // token where amounts should contribute to tracked volume and liquidity
 let WHITELIST: string[] = [
-    '0x4200000000000000000000000000000000000006', // WETH
-    '0xe7ac0e38a0baafeb3e5cba94e2fbae44511d0f8a', // MDX
-    '0x036cbd53842c5426634e7929541ec2318f3dcf7e', // USDC
-    '0x7169d38820dfd117c3fa1f22a697dba58d90ba06', // USDT
-    '0x49d75bb3ef83bdd83bef36aea14f9421e6b05603' // PEPE
+  '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // wmon
+  '0xd8c603a0fe45c77f13faf626c04fe69eeb628196', // mdx
+  '0xf817257fed379853cde0fa4f97ab987181b1e5ea', // usdc
+  '0xfbc2d240a5ed44231aca3a9e9066bc4b33f01149', // usdt
+  '0xab1fa5cc0a7db885bc691b60ebeebdf59354434b' // pepe
 ]
 
 let BLACKLIST: string[] = []

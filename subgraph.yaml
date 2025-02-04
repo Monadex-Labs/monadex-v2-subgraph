@@ -6,11 +6,11 @@ schema:
 dataSources:
   - kind: ethereum/contract
     name: Factory
-    network: base-sepolia
+    network: monad-testnet
     source:
-      address: '0x5f1498f06d631f010183d5de08af835c60eb1cd2'
+      address: '0x0cec70cf76da01522e34d5f5fc847b07982deee9'
       abi: Factory
-      startBlock: 6536001
+      startBlock: 2041372
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.6
@@ -34,7 +34,7 @@ dataSources:
 templates:
   - kind: ethereum/contract
     name: Pair
-    network: base-sepolia
+    network: monad-testnet
     source:
       abi: Pair
     mapping:
