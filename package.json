@@ -6,8 +6,8 @@
   "scripts": {
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",
-    "deploy": "graph deploy monadex-monad",
-    "create-local": "graph create --node http://localhost:8020/ monadex-monad",
+    "deploy": "graph deploy monadex-v2",
+    "create-local": "graph create --node http://localhost:8020/ monadex-v2",
     "deploy-local": "graph deploy sameepsi/quickswap --ipfs http://localhost:5001 --node http://127.0.0.1:8020/ --debug",
     "deploy02": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap02",
     "deploy06": "graph deploy --access-token <access_token> --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ sameepsi/quickswap06",

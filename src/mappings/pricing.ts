@@ -3,15 +3,16 @@ import { Pair, Token, Bundle } from '../types/schema'
 import { BigDecimal } from '@graphprotocol/graph-ts/index'
 import { ZERO_BD, ONE_BD } from './helpers'
 
-const WETH_ADDRESS = '0x760AfE86e5de5fa0Ee542fc7B7B713e1c5425701'
-const USDC_WETH_PAIR = '0x13a0dCC7831De6F986019D82211F4c3f07d9c2ca' 
+const WETH_ADDRESS = '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701'
+const USDC_WETH_PAIR = '0xec8eb233538abfc97f337da8ec3d1b57fbe31895' 
+
 
 
 export function getEthPriceInUSD(): BigDecimal {
   //For now we will only use USDC_WETH pair for ETH prices
   let usdcPair = Pair.load(USDC_WETH_PAIR);
   if (usdcPair !== null) {
-    return usdcPair.token0Price
+    return usdcPair.token1Price
   }
   else {
     return ZERO_BD
@@ -50,8 +51,9 @@ let WHITELIST: string[] = [
   '0x760afe86e5de5fa0ee542fc7b7b713e1c5425701', // wmon
   '0xd8c603a0fe45c77f13faf626c04fe69eeb628196', // mdx
   '0xf817257fed379853cde0fa4f97ab987181b1e5ea', // usdc
-  '0xfbc2d240a5ed44231aca3a9e9066bc4b33f01149', // usdt
-  '0xab1fa5cc0a7db885bc691b60ebeebdf59354434b' // pepe
+  '0x88b8e2161dedc77ef4ab7585569d2415a1c1055d', // usdt
+  '0xab1fa5cc0a7db885bc691b60ebeebdf59354434b', // pepe
+  '0xcf5a6076cfa32686c0df13abada2b40dec133f1d'  // wBTC
 ]
 
 let BLACKLIST: string[] = []
@@ -120,7 +122,7 @@ export function getTrackedVolumeUSD(
 
   // if less than 1 LPs, require high minimum reserve amount amount or return 0
   /**if (pair.liquidityProviderCount.lt(BigInt.fromI32(1))) {
-    let reserve0USD = pair.reserve0.times(price0)
+    let reserve0USD = pair.reserve0.times(price0)reserveUSD
     let reserve1USD = pair.reserve1.times(price1)
     if (WHITELIST.includes(token0.id) && WHITELIST.includes(token1.id)) {
       if (reserve0USD.plus(reserve1USD).lt(MINIMUM_USD_THRESHOLD_NEW_PAIRS)) {

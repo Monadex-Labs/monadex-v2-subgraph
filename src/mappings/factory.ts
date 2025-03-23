@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { log } from '@graphprotocol/graph-ts'
+import { log, BigInt } from '@graphprotocol/graph-ts'
 import { UniswapFactory, Pair, Token, Bundle } from '../types/schema'
 import { PoolCreated } from '../types/Factory/Factory'
 import { Pair as PairTemplate } from '../types/templates'
@@ -135,6 +135,11 @@ import { isOnBlacklist, isOnWhitelist } from './pricing'
 //   factory.save()
 // }
 export function handleNewPair(event: PoolCreated): void {
+    if (event.block.number.equals(BigInt.fromI32(8850956))) {
+      log.info("Skipping known problematic block {}", [event.block.number.toString()]);
+      return;
+    }
+
   let factory = UniswapFactory.load(FACTORY_ADDRESS);
   if (factory === null) {
     factory = new UniswapFactory(FACTORY_ADDRESS);

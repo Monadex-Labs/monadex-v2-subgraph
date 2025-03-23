@@ -1,5 +1,5 @@
 /* eslint-disable prefer-const */
-import { BigInt, BigDecimal, store, Address } from '@graphprotocol/graph-ts'
+import { BigInt, BigDecimal, store, Address, log } from '@graphprotocol/graph-ts'
 import {
   Pair,
   Token,
@@ -31,11 +31,14 @@ function isCompleteMint(mintId: string): boolean {
 
 
 export function handleTransfer(event: Transfer): void {
+  if (event.block.number.equals(BigInt.fromI32(8850956))) {
+    log.info("Skipping known problematic block {}", [event.block.number.toString()]);
+    return;
+  }
   // ignore initial transfers for first adds
-  if (event.params.to.toHexString() == ADDRESS_ZERO && event.params.value.equals(BigInt.fromI32(1000))) {
+  if (event.params.to.toHexString() == ADDRESS_ZERO && event.params.amount.equals(BigInt.fromI32(1000))) {
     return
   }
-
   let factory = UniswapFactory.load(FACTORY_ADDRESS) as UniswapFactory
   let transactionHash = event.transaction.hash.toHexString() as string
 
@@ -50,7 +53,7 @@ export function handleTransfer(event: Transfer): void {
   let pairContract = PairContract.bind(event.address)
 
   // liquidity token amount being transfered
-  let value = convertTokenToDecimal(event.params.value, BI_18)
+  let value = convertTokenToDecimal(event.params.amount, BI_18)
 
   // get or create transaction
   let transaction = Transaction.load(transactionHash)
@@ -212,6 +215,11 @@ export function handleTransfer(event: Transfer): void {
 }
 
 export function handleSync(event: Sync): void {
+  log.info('block number {}:', [event.block.number.toString()])
+  if (event.block.number.equals(BigInt.fromI32(8850956))) {
+    log.info("Skipping known problematic block {}", [event.block.number.toString()]);
+    return;
+  }
   let pair = Pair.load(event.address.toHex()) as Pair
   let token0 = Token.load(pair.s_tokenA) as Token
   let token1 = Token.load(pair.s_tokenB) as Token
@@ -277,6 +285,12 @@ export function handleSync(event: Sync): void {
 }
 
 export function handleMint(event: LiquidityAdded): void {
+  if (event.block.number.equals(BigInt.fromI32(8850956))) {
+    log.info("Skipping known problematic block {}", [event.block.number.toString()]);
+    return;
+  }
+
+
   let transaction = Transaction.load(event.transaction.hash.toHexString()) as Transaction
   let mints = transaction.mints as Array<string>
   let mint = MintEvent.load(mints[mints.length - 1]) as MintEvent
@@ -342,6 +356,10 @@ export function handleMint(event: LiquidityAdded): void {
 }
 
 export function handleBurn(event: LiquidityRemoved): void {
+  if (event.block.number.equals(BigInt.fromI32(8850956))) {
+    log.info("Skipping known problematic block {}", [event.block.number.toString()]);
+    return;
+  }
   let transaction = Transaction.load(event.transaction.hash.toHexString())
 
   // safety check
@@ -424,6 +442,10 @@ export function handleBurn(event: LiquidityRemoved): void {
  * @param {Swap} event - The swap event containing details of the swap operation.
  */
 export function handleSwap(event: AmountSwapped): void {
+  if (event.block.number.toI32() === 8850956) {
+    log.info("Skipping problematic block in handleSync: {}", [event.block.number.toString()]);
+    return;
+  }
   let pair = Pair.load(event.address.toHexString()) as Pair
   let token0 = Token.load(pair.s_tokenA) as Token
   let token1 = Token.load(pair.s_tokenB) as Token
